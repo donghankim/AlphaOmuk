@@ -7,6 +7,14 @@ import agent
 import pdb
 
 
+"""
+TO DO:
+1. agent does not recognize player moves (doesnt show in state graph)
+2. check to see if eval if doing well
+3. Implemented a way to evaluate opponents moves as well (self.op_token)
+"""
+
+
 # for quiting application
 def terminate():
     pygame.display.quit()
@@ -78,7 +86,7 @@ def main():
                     if board.game_run:
                         curr_player, wait_player = switch_player(curr_player, wait_player)
 
-    # pygame application
+    # pygame application (GUI enabled)
     else:
         pygame.init()
         window = pygame.display.set_mode((config.window_x, config.window_y))
@@ -113,7 +121,6 @@ def main():
                                 curr_player, wait_player = switch_player(curr_player, wait_player)
 
             pygame.display.update()
-
 
         # Game terminated
         while program_run:

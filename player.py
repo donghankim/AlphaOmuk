@@ -1,3 +1,5 @@
+from evaluation import Evaluator
+
 class Player(object):
     def __init__(self, config, name, token):
         self.config = config
@@ -12,6 +14,7 @@ class Player(object):
             self.token = 2
             self.op_token = 1
 
+        self.evaluator = Evaluator(self.token, self.op_token)
         self.history = []
         self.win = False
 

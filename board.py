@@ -52,7 +52,6 @@ class Board(object):
             end_x = 950
             pygame.draw.line(window, (0,0,0), (start_x, start_y), (end_x, start_y))
 
-
         # draw points
         for i in range(self.config.rows):
             for j in range(self.config.cols):
