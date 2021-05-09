@@ -36,16 +36,18 @@ class Heuristic(Player):
         recent_x = wait_player.history[-1][0]
         recent_y = wait_player.history[-1][1]
 
+        # create search area
         states = np.zeros_like(board.board)
         for row in range(board.board.shape[0]):
             for col in range(board.board.shape[1]):
                 if board.board[row][col] == curr_player.token:
                     states[row][col] = -1*curr_player.token
                 elif board.board[row][col] == wait_player.token:
-                    states[row][col] == -1*wait_player.token
+                    states[row][col] = -1*wait_player.token
                 else:
-                    states[row][col] = self.evaluator.evaluate(row, col, board.board)
+                    states[row][col] = self.evaluator.evaluate(row, col, states)
 
+        print(board.board)
         print(states)
         max_idx = np.unravel_index(states.argmax(), states.shape)
         row_move = max_idx[0]

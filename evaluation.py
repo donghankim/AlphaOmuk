@@ -1,4 +1,6 @@
 import numpy as np
+import pdb
+
 
 class Evaluator():
     def __init__(self, token, op_token):
@@ -14,6 +16,7 @@ class Evaluator():
         state_score += self.threeRow(row, col, search_area)
         state_score += self.liveTwo(row, col, search_area)
         state_score += self.twoRow(row, col, search_area)
+        pdb.set_trace()
         return state_score
 
     def fiveRow(self, row, col, search_area):

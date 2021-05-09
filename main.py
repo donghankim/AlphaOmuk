@@ -69,12 +69,17 @@ def main():
     curr_player = p1
     wait_player = p2
 
-    # no gui play (for debugging)
+    # debug
+    if config.debug:
+        board.set_board()
+        row_board, col_board = p2.make_move(p2, board)
+
+    # no gui play
     if config.no_gui:
         while board.game_run:
             print(board.board)
             if curr_player.name == 'computer':
-                row_board, col_board = curr_player.make_move(wait_player, board)
+                row_board, col_board = curr_player.make_move(curr_player, board)
                 board.game_run = curr_player.set_move(curr_player, row_board, col_board, board)
                 if board.game_run:
                     curr_player, wait_player = switch_player(curr_player, wait_player)

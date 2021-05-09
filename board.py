@@ -65,8 +65,11 @@ class Board(object):
                     pygame.draw.circle(window, (0, 0, 0), (x_pos, y_pos), 12, 0)
 
 
-
-
+    # for debugging purposes
+    def set_board(self):
+        self.board[5][5] = 2
+        self.board[5][6] = 2
+        self.board[5][7] = 2
 
 
 
