@@ -16,7 +16,6 @@ class Evaluator():
         state_score += self.threeRow(row, col, search_area)
         state_score += self.liveTwo(row, col, search_area)
         state_score += self.twoRow(row, col, search_area)
-        pdb.set_trace()
         return state_score
 
     def fiveRow(self, row, col, search_area):
@@ -120,7 +119,7 @@ class Evaluator():
     def north_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if row-i == -1:
                     break
                 elif i == length-1:
@@ -128,7 +127,7 @@ class Evaluator():
                 elif search_area[row-i][col] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if row-i == -1:
                     break
                 elif search_area[row-i][col] == self.token:
@@ -139,7 +138,7 @@ class Evaluator():
     def ne_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if col+i == search_area.shape[1] or row-i == -1:
                     break
                 elif i == length-1:
@@ -147,18 +146,18 @@ class Evaluator():
                 elif search_area[row-i][col+i] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if col+i == search_area.shape[1] or row-i == -1:
                     break
                 elif search_area[row-i][col+i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def east_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if col+i == search_area.shape[1]:
                     break
                 elif i == length-1:
@@ -166,18 +165,18 @@ class Evaluator():
                 elif search_area[row][col+i] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if col+i == search_area.shape[1]:
                     break
                 elif search_area[row][col+i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def se_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if row+i == search_area.shape[0] or col+i == search_area.shape[1]:
                     break
                 elif i == length-1:
@@ -185,18 +184,18 @@ class Evaluator():
                 elif search_area[row+i][col+i] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if row+i == search_area.shape[0] or col+i == search_area.shape[1]:
                     break
                 elif search_area[row+i][col+i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def south_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if row+i == search_area.shape[0]:
                     break
                 elif i == length-1:
@@ -204,18 +203,18 @@ class Evaluator():
                 elif search_area[row+i][col] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if row+i == search_area.shape[0]:
                     break
                 elif search_area[row+i][col] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def sw_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if col-i == -1 or row+i == search_area.shape[0]:
                     break
                 elif i == length-1:
@@ -223,18 +222,18 @@ class Evaluator():
                 elif search_area[row+i][col-i] == self.token:
                     score +=1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if col-i == -1 or row+i == search_area.shape[0]:
                     break
                 elif search_area[row+i][col-i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def west_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if col-i == -1:
                     break
                 elif i == length-1:
@@ -242,18 +241,18 @@ class Evaluator():
                 elif search_area[row][col-i] == self.token:
                     score +=1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if col-i == -1:
                     break
                 elif search_area[row][col-i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
     def nw_search(self, row, col, search_area, length, live):
         score = 0
         if live:
-            for i in range(length+1):
+            for i in range(1,length+1):
                 if row-i == -1 or col-i == -1:
                     break
                 elif i == length-1:
@@ -261,13 +260,13 @@ class Evaluator():
                 elif search_area[row-i][col-i] == self.token:
                     score += 1
         else:
-            for i in range(length):
+            for i in range(1,length):
                 if row-i == -1 or col-i == -1:
                     break
                 elif search_area[row-i][col-i] == self.token:
                     score += 1
 
-        return 1 if score == 5 else 0
+        return 1 if score == length else 0
 
 
 

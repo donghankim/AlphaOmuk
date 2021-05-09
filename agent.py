@@ -35,19 +35,17 @@ class Heuristic(Player):
     def make_move(self, curr_player, wait_player, board):
         recent_x = wait_player.history[-1][0]
         recent_y = wait_player.history[-1][1]
+        states = np.copy(board.board)
 
-        # create search area
-        states = np.zeros_like(board.board)
-        for row in range(board.board.shape[0]):
-            for col in range(board.board.shape[1]):
-                if board.board[row][col] == curr_player.token:
-                    states[row][col] = -1*curr_player.token
-                elif board.board[row][col] == wait_player.token:
-                    states[row][col] = -1*wait_player.token
+        for row in range(states.shape[0]):
+            for col in range(states.shape[1]):
+                if states[row][col] == curr_player.token:
+                    continue
+                elif states[row][col] == wait_player.token:
+                    continue
                 else:
                     states[row][col] = self.evaluator.evaluate(row, col, states)
 
-        print(board.board)
         print(states)
         max_idx = np.unravel_index(states.argmax(), states.shape)
         row_move = max_idx[0]

@@ -8,10 +8,9 @@ import pdb
 
 
 """
-TO DO:
-1. agent does not recognize player moves (doesnt show in state graph)
-2. check to see if eval if doing well
-3. Implemented a way to evaluate opponents moves as well (self.op_token)
+TODO:
+1. need to change heuristics for more efficient play.
+2. possibly change structure so that evaluation is independent of player (might be an issue later)
 """
 
 
