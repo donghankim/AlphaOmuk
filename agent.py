@@ -40,12 +40,14 @@ class Heuristic(Player):
         for row in range(states.shape[0]):
             for col in range(states.shape[1]):
                 if states[row][col] == curr_player.token:
-                    continue
+                    states[row][col] = -1*curr_player.token
                 elif states[row][col] == wait_player.token:
-                    continue
+                    states[row][col] = -1*wait_player.token
                 else:
-                    states[row][col] = self.evaluator.evaluate(row, col, states)
+                    states[row][col] = self.evaluator.evaluate(row, col, board.board)
 
+
+        pdb.set_trace()
         print(states)
         max_idx = np.unravel_index(states.argmax(), states.shape)
         row_move = max_idx[0]

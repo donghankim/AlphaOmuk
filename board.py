@@ -12,6 +12,9 @@ class Board(object):
         self.board = np.array([[0] * self.rows] * self.cols)
         self.game_run = True
 
+        if config.debug:
+            self.set_board()
+
     def check_win(self, token):
         # check horizontal
         for i in range(self.cols):
@@ -70,6 +73,8 @@ class Board(object):
         self.board[5][5] = 2
         self.board[5][6] = 2
         self.board[5][7] = 2
+        self.board[4][5] = 2
+        self.board[3][5] = 2
 
 
 

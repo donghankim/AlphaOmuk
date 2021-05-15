@@ -21,9 +21,9 @@ class Player(object):
     def set_move(self, curr_player, row, col, board):
         board.board[row][col] = curr_player.token
         if board.check_win(curr_player.token):
-            return False
+            return False, board
         else:
-            return True
+            return True, board
 
     def valid_move(self,row,col,board):
         if col > self.config.cols-1 or row > self.config.rows-1:

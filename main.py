@@ -9,8 +9,8 @@ import pdb
 
 """
 TODO:
-1. need to change heuristics for more efficient play.
-2. possibly change structure so that evaluation is independent of player (might be an issue later)
+1. Evaluation seems good.
+2. Fix the board so that stones are drawn inside the square.
 """
 
 
@@ -67,11 +67,8 @@ def main():
     p2 = agent.Heuristic(config, 'computer', 'black')
     curr_player = p1
     wait_player = p2
+    moves = 0
 
-    # debug
-    if config.debug:
-        board.set_board()
-        row_board, col_board = p2.make_move(p2, board)
 
     # no gui play
     if config.no_gui:
@@ -104,8 +101,9 @@ def main():
 
             if curr_player.name == 'computer':
                 row_board, col_board = curr_player.make_move(curr_player, wait_player, board)
-                board.game_run = curr_player.set_move(curr_player, row_board, col_board, board)
+                board.game_run, board = curr_player.set_move(curr_player, row_board, col_board, board)
                 if board.game_run:
+                    moves += 1
                     curr_player, wait_player = switch_player(curr_player, wait_player)
 
             else:
@@ -120,7 +118,7 @@ def main():
                         col_board = abs(round(x_pos/50) - 1)
                         row_board = abs(round(y_pos/50) - 1)
                         if curr_player.valid_move(row_board, col_board, board):
-                            board.game_run = curr_player.set_move(curr_player, row_board, col_board, board)
+                            board.game_run, board = curr_player.set_move(curr_player, row_board, col_board, board)
                             if board.game_run:
                                 curr_player, wait_player = switch_player(curr_player, wait_player)
 
