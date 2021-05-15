@@ -59,13 +59,13 @@ class Board(object):
         for i in range(self.config.rows):
             for j in range(self.config.cols):
                 if self.board[i][j] == 1:
-                    x_pos = (j+1)*50
-                    y_pos = (i+1)*50
-                    pygame.draw.circle(window, (255, 255, 255), (x_pos, y_pos), 12, 0)
+                    x_pos = (j+1)*50 +25
+                    y_pos = (i+1)*50 +25
+                    pygame.draw.circle(window, (255, 255, 255), (x_pos, y_pos), 20, 0)
                 elif self.board[i][j] == 2:
-                    x_pos = (j+1)*50
-                    y_pos = (i+1)*50
-                    pygame.draw.circle(window, (0, 0, 0), (x_pos, y_pos), 12, 0)
+                    x_pos = (j+1)*50 +25
+                    y_pos = (i+1)*50 +25
+                    pygame.draw.circle(window, (0, 0, 0), (x_pos, y_pos), 20, 0)
 
 
     # for debugging purposes

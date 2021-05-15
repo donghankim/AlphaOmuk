@@ -46,8 +46,6 @@ class Heuristic(Player):
                 else:
                     states[row][col] = self.evaluator.evaluate(row, col, board.board)
 
-
-        pdb.set_trace()
         print(states)
         max_idx = np.unravel_index(states.argmax(), states.shape)
         row_move = max_idx[0]

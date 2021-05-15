@@ -9,8 +9,7 @@ import pdb
 
 """
 TODO:
-1. Evaluation seems good.
-2. Fix the board so that stones are drawn inside the square.
+1. Update evaluation function so that only consecutive placements get +score
 """
 
 
@@ -115,8 +114,8 @@ def main():
 
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         x_pos, y_pos = event.pos
-                        col_board = abs(round(x_pos/50) - 1)
-                        row_board = abs(round(y_pos/50) - 1)
+                        col_board = x_pos//50 -1
+                        row_board = y_pos//50 -1
                         if curr_player.valid_move(row_board, col_board, board):
                             board.game_run, board = curr_player.set_move(curr_player, row_board, col_board, board)
                             if board.game_run:
