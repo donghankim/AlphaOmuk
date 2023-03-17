@@ -1,52 +1,49 @@
 # Board class
 import numpy as np
-import pygame
+from tqdm import tqdm
 import pdb
 
 
 class Game(object):
     def __init__(self, config):
         self.config = config
-        self.win_count = self.config.cnt
+        self.win_cnt = self.config.cnt
         self.rows = self.config.rows
         self.cols = self.config.cols
         self.board = np.array([['.']*self.rows for _ in range(self.cols)])
+        self.gameLoop = True
         self.pywin = False
-
     
     
-    def cli_game_loop(self, p1, p2):
-        curr_player = p1
-        
-        print(self.board)
-        while True:
-            if curr_player.name == "human":
-                pos_in = list(map(int, input("Your turn (row,col): ").split()))
-                ridx, cidx = pos_in[0], pos_in[1]
-            else:
-                ridx, cidx = curr_player.get_move(self.board.copy())
-            
-            if self.valid_move(ridx, cidx):
-                self.board[ridx][cidx] = curr_player.token
-                res = self.check_win(curr_player.token)
-                if res:
-                    print(f"\n{curr_player.name} wins!")
+    def game_loop(self, p1, p2):
+        self.print_board()
+        while self.gameLoop:
+            if np.sum(self.board == ".") == 0:
+                self.gameLoop = False
+                print("game tied...")
+                return
+            while True:
+                ridx, cidx = p1.get_move(self.board, p2.recent)
+                if self.valid_move(ridx, cidx):
+                    self.board[ridx, cidx] = p1.token
+                    self.print_board()
+                    p1.recent = (ridx, cidx)
+                    self.check_win(p1.token)
+                    p1, p2 = p2, p1
                     break
-                else:
-                    curr_player.recent = (ridx, cidx)
-                    # switch player
-                    curr_player = p2 if curr_player is p1 else p1
-            else:
-                continue
-
-            # display board info
-            if curr_player is p1:
-                print(f"{p1.name} placed at {p1.recent[0]}, {p1.recent[1]}")
-                print(f"{p2.name} placed at {p2.recent[0]}, {p2.recent[1]}\n")
-                print(self.board)
+        print(f"{p2.name} wins!")
 
 
-    def gui_game_loop(self, p1, p2):
+
+    def start_cli_game(self, p1, p2, simulate = 0):
+        print(f"Board size: {self.rows}x{self.cols}")
+        print(f"{self.win_cnt} in-a-row wins the game.\n")
+        self.game_loop(p1, p2)
+
+
+
+    def start_gui_game(self, p1, p2):
+        import pygame
         pygame.init()
         self.pywin = pygame.display.set_mode((self.config.window_x, self.config.window_y))
         pygame.display.set_caption("Alpha 오목")
@@ -91,7 +88,7 @@ class Game(object):
             pygame.display.update()
         self.terminate()
 
-    
+
     def valid_move(self, row, col):
         if col > self.cols-1 or row > self.rows-1:
             print("Move out of bounds.")
@@ -99,42 +96,58 @@ class Game(object):
         elif col < 0 or row < 0:
             print("Move out of bounds.")
             return False
-        elif self.board[row][col] != ".":
+        elif self.board[row,col] != ".":
             print("Move already taken...")
             return False
-        return True
+        else:
+            return True
+    
+    def check_win(self, token):
+        # Check rows
+        for i in range(self.rows):
+            for j in range(self.cols-self.win_cnt+1):
+                if all(self.board[i][j+k] == token for k in range(self.win_cnt)):
+                    self.gameLoop = False
+
+        # Check columns
+        for i in range(self.rows-self.win_cnt+1):
+            for j in range(self.cols):
+                if all(self.board[i+k][j] == token for k in range(self.win_cnt)):
+                    self.gameLoop = False
+
+        # Check diagonal (top-left to bottom-right)
+        for i in range(self.rows-self.win_cnt+1):
+            for j in range(self.cols-self.win_cnt+1):
+                if all(self.board[i+k][j+k] == token for k in range(self.win_cnt)):
+                    self.gameLoop = False
+
+        # Check diagonal (bottom-left to top-right)
+        for i in range(self.win_cnt-1, self.rows):
+            for j in range(self.cols-self.win_cnt+1):
+                if all(self.board[i-k][j+k] == token for k in range(self.win_cnt)):
+                    self.gameLoop = False
 
 
-    # check for 3-3 rule (do this last)
+    # TODO: check for 3-3 rule
     def check_33(self):
         pass
+    
+    
+    def print_board(self):
+        # easier to play
+        print(" ", end = " ")
+        for col in range(self.cols):
+            print('{:2d}'.format(col), end = " ")
+        print()
+        
+        for row in range(self.rows):
+            print('{:2d}'.format(row), end = " ")
+            for col in range(self.cols):
+                print('{:2s}'.format(self.board[row,col]), end = " ")
+            print()
+        print()
 
-
-    def check_win(self, token):
-        # check horizontal
-        for i in range(self.cols):
-            for j in range(self.rows - self.win_count +1):
-                if self.board[i][j] == token and self.board[i][j+1] == token and self.board[i][j+2] == token and self.board[i][j+3] == token and self.board[i][j+4] == token:
-                    return True
-
-        # check vertical
-        for i in range(self.cols - self.win_count + 1):
-            for j in range(self.rows):
-                if self.board[i][j] == token and self.board[i+1][j] == token and self.board[i+2][j] == token and self.board[i+3][j] == token and self.board[i+4][j] == token:
-                    return True
-
-        # check negative diagonal
-        for i in range(self.win_count-1, self.cols):
-            for j in range(self.win_count-1, self.rows):
-                if self.board[i][j] == token and self.board[i-1][j-1] == token and self.board[i-2][j-2] == token and self.board[i-3][j-3] == token and self.board[i-4][j-4] == token:
-                    return True
-
-        #check positive diagonal
-        for i in range(self.win_count-1, self.cols):
-            for j in range(self.rows - self.win_count-1):
-                if self.board[i][j] == token and self.board[i-1][j+1] == token and self.board[i-2][j+2] == token and self.board[i-3][j+3] == token and self.board[i-4][j+4] == token:
-                    return True
-
+    
     def render(self):
         self.pywin.fill([255, 178, 102])
 
@@ -191,15 +204,6 @@ class Game(object):
         pygame.display.quit()
         pygame.quit()
         print("Program successfully terminated.")
-
-
-    # for debugging purposes
-    def test_board(self):
-        self.board[5][5] = 2
-        self.board[5][6] = 2
-        self.board[5][7] = 2
-        self.board[4][5] = 2
-        self.board[3][5] = 2
 
 
 
