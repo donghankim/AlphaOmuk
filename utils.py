@@ -23,6 +23,4 @@ class State:
             
 
 
-def convert(state):
-    return np.frombuffer(state, dtype = '<U1').reshape(3,3)
 

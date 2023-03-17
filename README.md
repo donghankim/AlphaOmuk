@@ -41,12 +41,12 @@ For a game like Gomoku, where the board size is 15x15, minimax will take far too
 Alpha represents the smallest utility value found, while beta represents the largest utility value. In the example above, if white beings by evaluating state D, then the utility at state D will be min(0,0) = 0. State C has two child nodes, and if H is evaluated first, then we can prune state G. 
 This is because we know for a fact that state A is a min node, and therefore whatever utility is returned, white will never choose any state with a utility higher than 0 (state D). As a result, States G and E will be pruned if white evaluates the states in a bottom-up manner.
 
-However, even with alpha-beta pruning, in games with large state spaces (like Gomoku) we still need to make adjustments. Therefore, I have added a few more adjustments. First, I have set the depth level to 8 (iterative deepening) and have limited the search space to a 6x6 board from the last move placed. 
-The search space is increased by 1 if there are less than 2 moves to evaluate. On a 8x8 board, if the last move made by the oponent is (3,4), minimax will only evaluate $\sum\limits_{i=1}^{5}\sum\limits_{j=2}^{6} minimax(S_{i,j})$
-
-Despite all these efforts, without some kind of heuristic, minimax fails to play properly. My minimax implementation can be found in <strong>agent/minimax.py</strong>.
+To further optimizem minimax, we can cache (store) the game tree since in a determininstic, non-stochastic environment, the state values will not change. Moreover, we can employ an iterative deepening approach to prevent minimax from recursing too deep into the game tree.
+The search space is also limited based on the last move played. For example, if the last move placed is (3,4), minimax will only evaluate $\sum\limits_{i=1}^{5}\sum\limits_{j=2}^{6} minimax(S_{i,j})$. However, Despite all these efforts, without a heuristic, minimax 
+fails to play optimially in time. In fact, when the action space is greater than 9, the amount of time it takes for minimax to find a solution is unacceptable.
 
 ## Monte-Carlo Tree Simulation
+
 
 ## $V^{\pi}(s)$ Policy Iteration
 
