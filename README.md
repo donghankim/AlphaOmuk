@@ -41,16 +41,51 @@ For a game like Gomoku, where the board size is 15x15, minimax will take far too
 Alpha represents the smallest utility value found, while beta represents the largest utility value. In the example above, if white beings by evaluating state D, then the utility at state D will be min(0,0) = 0. State C has two child nodes, and if H is evaluated first, then we can prune state G. 
 This is because we know for a fact that state A is a min node, and therefore whatever utility is returned, white will never choose any state with a utility higher than 0 (state D). As a result, States G and E will be pruned if white evaluates the states in a bottom-up manner.
 
-To further optimizem minimax, we can cache (store) the game tree since in a determininstic, non-stochastic environment, the state values will not change. Moreover, we can employ an iterative deepening approach to prevent minimax from recursing too deep into the game tree.
-The search space is also limited based on the last move played. For example, if the last move placed is (3,4), minimax will only evaluate $\sum\limits_{i=1}^{5}\sum\limits_{j=2}^{6} minimax(S_{i,j})$. However, Despite all these efforts, without a heuristic, minimax 
-fails to play optimially in time. In fact, when the action space is greater than 9, the amount of time it takes for minimax to find a solution is unacceptable.
+To further optimize minimax we can cache (store) the game tree since two-player board games are determininstic and non-stochastic. Moreover, we can employ an iterative deepening approach to prevent minimax from recursing too deep into the game tree.
+The search space is also limited based on the last move played. For example, if the last move placed is (3,4), minimax will only evaluate:
 
-## Monte-Carlo Tree Simulation
+$$\sum\limits_{i=1}^{5}\sum\limits_{j=2}^{6} minimax(S_{i,j})$$ 
 
+However, Despite all these efforts, without a heuristic evaluator minimax fails to play optimially in time. In fact, when the action space is greater than 9, the amount of time it takes for minimax to find a solution is unacceptable.
 
-## $V^{\pi}(s)$ Policy Iteration
+## MCTS (Monte Carlo Tree Simulation)
+MCTS is comprised of four distinct steps: selection, expansion, simulation, and backpropagation. These steps are repeated multiple times before a decision is made (current implementation repeats 100 times). Unlike minimax, MCTS does not
+guarantee optimality.
+
+<p align = "center">
+<img src = "media/mcts.png" />
+<br>
+<i>figure 1 source: <a href = "https://www.geeksforgeeks.org/ml-monte-carlo-tree-search-mcts/">Geeks for Geeks</a></i>
+</p>
+
+#### Selection & Expansion
+The selection policy selects a **leaf** node (state) to expand in the current game tree. The more advanced the selection policy, the better MCTS will perform. One basic example of a selection policy is the UTC policy. Given state $n$ and its
+parent (successor) state $n_{p}$:
+
+$$UTC(n) = \frac{w(n)}{N(n)} + \alpha \sqrt{\frac{\ln N(n_{p})}{N(n)}} $$
+
+where $w(n)$ represents the number of "wins" state $n$ has accured, and $N(n)$ represents the number of simulations state $n$ has participated in. UTC incoorporates the idea of *exploitation vs exploration* and aims to balance
+the trade-off between the two. $\alpha$ is the exploration parameter, decreasing the value will encourage MCTS to exploit rather than explore whilst increasing will achieve the opposite. At
+the begining of every repetition, we visit all leaf states and select the one with the highest UTC value. From the selected state $n$, all possible child states are generated. There is no need to expand a child state that is already in the game tree, or one that is terminal.
+
+#### Simulation & Backpropagation
+In addition to the selection policy, there also is a need for a simulation (rollout) policy. The simulation policy governs how MCTS will "play" and simulate the game from the expanding state. Ideally, the simulation should run until a terminal
+state is reached but for games with a large state space this may not be possible (in which case an evaluation function is needed). Regardless, once the simulation is complete the result of that simulation is backpropagated to all parent states
+that participated in the simulation. When using UTC as our selection policy, $w(n)$ and $N(n)$ must be updated accordingly. Note that the states are **not** added to the game tree during the simulation step. All states seen are discarded and
+only the **result** of the simulation is backpropagated.
+
+The current implementation of MCTS uses UTC selection, and a random simulation (rollout) policy. 
 
 ## SARSA
+The Bellman Optimality equations define a recursive relationship between value iteration and policy iteration to solve Markov decision process (MDP) problems:
+
+$$ V^{\ast}(s) = \max_{a} \sum_{s^{\prime}} p(s^{\prime}|s,a) \left[R(s^{\prime},s,a) + \gamma V^{\ast}(s^{\prime}) \right], s^{\prime} \in SS$$
+
+$$ V^{\pi^{\ast}}(s) = \argmax_{a} \sum_{s^{\prime}} p(s^{\prime}|s,a) \left[R(s^{\prime},s,a) + \gamma V^{\ast}(s^{\prime}) \right], s^{\prime} \in SS$$
+
+$SS$ is a set of all successor states reachable after one action (move). Board games are not MDP because the environment is deterministic, meaning if a player places a token on board positions (1,2), then 
+there is 100% guarantee that the players token will be placed at position (1,2). As a result, the conditional probability $p(s^{\prime}|s,a)$ which defines the probability of arriving at state $s^{\prime}$
+given the current state $s$ and action (move) $a$, will always be 1 (in almost all board games).
 
 ## DQN (Deep Q-Network)
 

@@ -1,8 +1,5 @@
-# human player (not AI)
-
 import numpy as np
 import re
-import pdb
 
 
 # O: Max token, X: Min token

@@ -16,11 +16,14 @@ class Game(object):
     
     
     def game_loop(self, p1, p2):
+        if p2.token == "O":
+            p1, p2 = p2, p1
+
         self.print_board()
         while self.gameLoop:
             if np.sum(self.board == ".") == 0:
                 self.gameLoop = False
-                print("game tied...")
+                print("game tied...\n")
                 return
             while True:
                 ridx, cidx = p1.get_move(self.board, p2.recent)
@@ -34,12 +37,10 @@ class Game(object):
         print(f"{p2.name} wins!")
 
 
-
     def start_cli_game(self, p1, p2, simulate = 0):
         print(f"Board size: {self.rows}x{self.cols}")
         print(f"{self.win_cnt} in-a-row wins the game.\n")
         self.game_loop(p1, p2)
-
 
 
     def start_gui_game(self, p1, p2):

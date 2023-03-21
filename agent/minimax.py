@@ -1,5 +1,4 @@
 from .player import Player
-from utils import *
 import pdb
 
 class Minimax(Player):
